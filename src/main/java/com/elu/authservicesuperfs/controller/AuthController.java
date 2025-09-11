@@ -4,8 +4,10 @@ package com.elu.authservicesuperfs.controller;
 import com.elu.authservicesuperfs.dto.UserRequestDto;
 import com.elu.authservicesuperfs.repo.UserRepo;
 import com.elu.authservicesuperfs.service.AuthService;
+import jakarta.ws.rs.core.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +69,20 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(){
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+        return ResponseEntity.ok( )
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Logout successful");
     }
 
     @GetMapping("/blah")
