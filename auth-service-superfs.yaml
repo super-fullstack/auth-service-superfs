@@ -1,0 +1,50 @@
+---
+# 5.1) Service for auth Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service-superfs # matches your gateway route lb://auth-service-superfs
+  labels:
+    app: auth-service-superfs
+spec:
+  selector:
+    app: auth-service-superfs
+  ports:
+    - name: http
+      port: 8010                 # your service’s port
+      targetPort: 8010
+  type: ClusterIP
+---
+# 5.2) Deployment for Fruit Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-superfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service-superfs
+  template:
+    metadata:
+      labels:
+        app: auth-service-superfs
+    spec:
+      containers:
+        - name: auth-service-superfs
+          image: elu107/auth-service-superfs:latest   # the image tag you built
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8010
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8010
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8010
+            initialDelaySeconds: 10
+            periodSeconds: 5
