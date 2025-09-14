@@ -5,10 +5,10 @@ import com.elu.authservicesuperfs.dto.UserDtoOpenFeign;
 import com.elu.authservicesuperfs.model.Users;
 import com.elu.authservicesuperfs.repo.UserRepo;
 import com.elu.authservicesuperfs.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +41,26 @@ public class UserController {
                 .toList();
         System.out.println("this is the response " + x.toString());
         return x;
+    }
+
+    @GetMapping("/get-user")
+    public ResponseEntity<UserDtoOpenFeign> getUser(@RequestParam("email") String email) {
+
+        try {
+            System.out.println("inside getUser");
+            Users user = userRepo.findByEmail(email)
+                    .orElseThrow(RuntimeException::new);
+            UserDtoOpenFeign userDtoOpenFeign = new UserDtoOpenFeign();
+            userDtoOpenFeign.setUsername(user.getUsername());
+            userDtoOpenFeign.setFirstName(user.getFirstName());
+            userDtoOpenFeign.setLastName(user.getLastName());
+            userDtoOpenFeign.setEmail(email);
+            userDtoOpenFeign.setPhone(user.getPhone());
+            userDtoOpenFeign.setAddress(user.getAddress());
+            return new ResponseEntity<>(userDtoOpenFeign, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/update-user")

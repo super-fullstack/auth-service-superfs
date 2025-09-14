@@ -57,10 +57,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequestDto request) {
+    public ResponseEntity<?> login(@RequestBody UserRequestDto request) {
 
         try {
-            ResponseEntity<String> x = authService
+            ResponseEntity<?> x = authService
                     .authenticate(
                             request.getEmail(),
                             request.getPassword());

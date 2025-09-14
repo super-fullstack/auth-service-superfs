@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<String> authenticate(String email, String password) {
+    public ResponseEntity<?> authenticate(String email, String password) {
         try {
 
             System.out.println("INCOMIGN DATA " + email + " " + password);

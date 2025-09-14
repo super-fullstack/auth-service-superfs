@@ -8,5 +8,5 @@ public interface AuthService {
     public boolean saveUser(UserRequestDto user);
 
 
-    ResponseEntity<String> authenticate(String email, String password);
+    ResponseEntity<?> authenticate(String email, String password);
 }
